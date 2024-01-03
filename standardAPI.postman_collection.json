@@ -1,0 +1,1575 @@
+{
+	"info": {
+		"_postman_id": "071c3875-a6d2-495f-a9b4-3e25fc20bb35",
+		"name": "standardAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31332073"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "registerUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"sahadev\",\r\n    \"lastName\":\"dahit\",\r\n    \"email\":\"dahit@gmail.com\",\r\n    \"password\":\"hunk\",\r\n    \"phoneNo\":\"9865765419\",\r\n    \"isAdmin\":false,\r\n    \"status\":true\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "loginUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"dahit123@gmail.com\",\r\n    \"password\":\"hunk\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProfile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUserProfile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\":\"sahadev\",\r\n    \"lastName\":\"dahit\",\r\n    \"email\":\"dahit123@gmail.com\",\r\n    \"password\":\"hunk\",\r\n    \"phoneNo\":\"9865765419\",\r\n    \"isAdmin\":false,\r\n    \"status\":true\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "addCategories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"fruits\",\r\n    \"description\":\"best collections of flowers\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCategories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatreCategories",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"fruit\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/659552b5e3aa3747beeb4d45",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"659552b5e3aa3747beeb4d45"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/659552b5e3aa3747beeb4d45",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"659552b5e3aa3747beeb4d45"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "nurseries",
+			"item": [
+				{
+					"name": "addNurseries",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Happy Seedlings Nursery\",\r\n    \"time\": \"9:00 AM - 4:30 PM\",\r\n    \"distance\": \"1.5 miles\",\r\n    \"address\": \"789 Pine Street\"\r\n    \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/nurseries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getNurseries",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/nurseries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateNurseries",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Happy Seedlings Nursery\",\r\n    \"time\": \"10:00 AM - 4:30 PM\",\r\n    \"distance\": \"1.5 miles\",\r\n    \"address\": \"789 Pine Street\"\r\n    \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/nurseries/659559350f50599092974bd2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries",
+								"659559350f50599092974bd2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteNurseries",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/nurseries/65955fe80fd7cddbcf8d5194",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries",
+								"65955fe80fd7cddbcf8d5194"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addNurseryReview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rating\": 3,\r\n    \"comment\": \"Great place! Friendly staff and a wonderful.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/nurseries/659560120fd7cddbcf8d5195/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries",
+								"659560120fd7cddbcf8d5195",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteNurseryReview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/nurseries/659560120fd7cddbcf8d5195/reviews/6595602b0fd7cddbcf8d5197",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries",
+								"659560120fd7cddbcf8d5195",
+								"reviews",
+								"6595602b0fd7cddbcf8d5197"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "plants",
+			"item": [
+				{
+					"name": "createPlants",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Mary\",\r\n  \"description\": \"Updated description\",\r\n  \"category_id\": \"6595533fb6b35d901d623453\",\r\n  \"nursery_id\": \"659560120fd7cddbcf8d5195\", \r\n  \"price\": 66,\r\n  \"quantity\": 60\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/plants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPlants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/plants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePlants",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"name\": \"Rose\",\r\n       \"description\": \"Updated description\",\r\n    \"price\": 50\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/plants/6595653b9962024c33c5731b",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants",
+								"6595653b9962024c33c5731b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlants",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/plants/6595653b9962024c33c5731b",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants",
+								"6595653b9962024c33c5731b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addPlantReview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rating\": 3,\r\n    \"comment\": \"Beautiful\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/plants/659568c28480b57dd5b47345/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants",
+								"659568c28480b57dd5b47345",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlantReview",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/plants/659568c28480b57dd5b47345/reviews/659568d18480b57dd5b47347",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants",
+								"659568c28480b57dd5b47345",
+								"reviews",
+								"659568d18480b57dd5b47347"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "nurseryBookmarks",
+			"item": [
+				{
+					"name": "addNurseryBookmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/nurseryBookmarks/659560120fd7cddbcf8d5195/bookmarks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseryBookmarks",
+								"659560120fd7cddbcf8d5195",
+								"bookmarks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteNurseryBookmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/nurseryBookmarks/659560120fd7cddbcf8d5195/bookmarks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseryBookmarks",
+								"659560120fd7cddbcf8d5195",
+								"bookmarks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nurseryBokmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/nurseryBookmarks/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseryBookmarks",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "plantsBookmarks",
+			"item": [
+				{
+					"name": "addPlantBookmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/plantsBookmarks/659568c28480b57dd5b47345/bookmarks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plantsBookmarks",
+								"659568c28480b57dd5b47345",
+								"bookmarks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPlantsBookmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/plantsBookmarks/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plantsBookmarks",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePlantsBookmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/plantsBookmarks/659568c28480b57dd5b47345/bookmarks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plantsBookmarks",
+								"659568c28480b57dd5b47345",
+								"bookmarks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "carts",
+			"item": [
+				{
+					"name": "addToCarts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"plant_id\": \"659568c28480b57dd5b47345\",\r\n    \"address\": \"123 Main St, Cityville\",\r\n    \"quantity\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCarts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"quantity\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateCarts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"address\": \"123 Main St, Cityville\",\r\n     \"quantity\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts/65958c8cbeabd3a7fc3c327d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"65958c8cbeabd3a7fc3c327d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCarts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/carts/65958c8cbeabd3a7fc3c327d",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"65958c8cbeabd3a7fc3c327d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "gifts",
+			"item": [
+				{
+					"name": "addToGifts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"simple\",\r\n    \"nursery_id\": \"659560120fd7cddbcf8d5195\",\r\n    \"message\": \"Happy gardening!\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/gifts/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"gifts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getGifts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"simple\",\r\n    \"nursery_id\": \"659560120fd7cddbcf8d5195\",\r\n    \"message\": \"Happy gardening!\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/gifts/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"gifts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteGifts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/gifts/65958f1def91dc8866b53b2f",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"gifts",
+								"65958f1def91dc8866b53b2f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "createOrder",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"plant_id\": \"659568c28480b57dd5b47345\",\r\n    \"status\": \"pending\",\r\n    \"quantity\": 2,\r\n    \"paymentMethod\": \"Credit Card\",\r\n    \"currency\": \"usd\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOrders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateOrder",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"plant_id\": \"659568c28480b57dd5b47345\",\r\n    \"status\": \"pending\",\r\n    \"quantity\": 60,\r\n    \"paymentMethod\": \"Credit Card\",\r\n    \"currency\": \"usd\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders/6595920760b463d698136acf",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"6595920760b463d698136acf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteOrder",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders/6595920760b463d698136acf",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"6595920760b463d698136acf"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pots",
+			"item": [
+				{
+					"name": "addPots",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"plant_id\": \"659568c28480b57dd5b47345\",\r\n    \"name\": \"Ceramic Pot\",\r\n    \"price\": 20.99\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pots/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pots",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPots",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pots",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePots",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ceramic Pot\",\r\n    \"price\": 25.99\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pots/6595939b4abee4e72efae38c",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pots",
+								"6595939b4abee4e72efae38c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePots",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/pots/6595939b4abee4e72efae38c",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pots",
+								"6595939b4abee4e72efae38c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "savedAddress",
+			"item": [
+				{
+					"name": "createSavedAddress",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"receiver_name\": \"Updated John Doe\",\r\n    \"receiver_contact\": \"+9876543210\",\r\n    \"streetAddress\": \"456 Oak Avenue\",\r\n    \"apartment\": \"Unit 8\",\r\n    \"city\": \"Townsville\",\r\n    \"country\": \"Countryland\",\r\n    \"zipcode\": \"54321\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/savedAddress/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"savedAddress",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSavedAddress",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/savedAddress/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"savedAddress",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateSavedAddress",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"receiver_name\": \"Updated John Doe\",\r\n    \"receiver_contact\": \"+9876543210\",\r\n    \"streetAddress\": \"456 Oak Avenue\",\r\n    \"apartment\": \"Unit 99\",\r\n    \"city\": \"delhi\",\r\n    \"country\": \"Countryland\",\r\n    \"zipcode\": \"54321\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/savedAddress/659595adb24095f8f681c7f8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"savedAddress",
+								"659595adb24095f8f681c7f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteSavedAddress",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/savedAddress/659595adb24095f8f681c7f8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"savedAddress",
+								"659595adb24095f8f681c7f8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "homepage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
