@@ -127,7 +127,7 @@ router.post("/", async (req, res) => {
         // Insert a new document only if the user with the provided email doesn't exist
         const result = await collection.insertOne(newDocument);
 
-        res.send(result).status(204); // Return the inserted user details without password
+        res.json(newDocument).status(204); // Return the inserted user details without password
     } catch (error) {
         console.error(error);
         res.status(500).json({

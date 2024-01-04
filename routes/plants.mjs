@@ -31,10 +31,10 @@ router.get("/", async (req, res) => {
             return plant;
         });
 
-        res.status(200).send(plantsWithAverageRating);
+        res.status(200).json(plantsWithAverageRating);
     } catch (error) {
         console.error("Error fetching plants:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -50,7 +50,7 @@ router.get("/:id", async (req, res) => {
         const result = await collection.findOne(query);
 
         if (!result) {
-            res.status(404).send({
+            res.status(404).json({
                 message: "Plant not found"
             });
         } else {
@@ -64,11 +64,11 @@ router.get("/:id", async (req, res) => {
                 result.averageRating = 0;
             }
 
-            res.status(200).send(result);
+            res.status(200).json(result);
         }
     } catch (error) {
         console.error("Error fetching plant:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -102,10 +102,10 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
 
         const result = await collection.insertOne(newPlant);
 
-        res.status(204).send(result);
+        res.status(204).json(result);
     } catch (error) {
         console.error("Error creating plant:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -145,7 +145,7 @@ router.put("/:id", isLoggedIn, async (req, res) => {
         }, updateQuery);
 
         if (result.modifiedCount === 0) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found or no changes applied"
             });
         }
@@ -153,10 +153,10 @@ router.put("/:id", isLoggedIn, async (req, res) => {
         const updatedPlant = await collection.findOne({
             _id: plantId
         });
-        res.status(200).send(updatedPlant);
+        res.status(200).json(updatedPlant);
     } catch (error) {
         console.error("Error updating plant:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -172,17 +172,17 @@ router.delete("/:id", isLoggedIn, isAdmin, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found"
             });
         }
 
-        res.status(200).send({
+        res.status(200).json({
             message: "Plant deleted successfully"
         });
     } catch (error) {
         console.error("Error deleting plant:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -200,7 +200,7 @@ router.post("/:plantId/reviews", isLoggedIn, async (req, res) => {
             _id: plantId
         });
         if (!existingPlant) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found"
             });
         }
@@ -223,12 +223,12 @@ router.post("/:plantId/reviews", isLoggedIn, async (req, res) => {
             _id: plantId
         }, updateQuery);
 
-        res.status(204).send({
+        res.status(204).json({
             message: "Review added successfully"
         });
     } catch (error) {
         console.error("Error adding plant review:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -246,7 +246,7 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
         });
 
         if (!plant) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found"
             });
         }
@@ -255,7 +255,7 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
         const reviewIndex = plant.plantReviews.findIndex((review) => review._id.equals(reviewId));
 
         if (reviewIndex === -1) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant review not found"
             });
         }
@@ -272,12 +272,12 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
             }
         });
 
-        res.status(204).send({
+        res.status(204).json({
             message: "Plant review deleted successfully"
         });
     } catch (error) {
         console.error("Error deleting plant review:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }

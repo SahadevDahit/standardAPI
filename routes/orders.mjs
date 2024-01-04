@@ -27,7 +27,7 @@ router.post("/", isLoggedIn, async (req, res) => {
         });
 
         if (!plant) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found"
             });
         }
@@ -51,13 +51,13 @@ router.post("/", isLoggedIn, async (req, res) => {
         // Save the order to the database
         await db.collection("orders").insertOne(order);
 
-        res.status(201).send({
+        res.status(201).json({
             message: "Order created successfully",
             order
         });
     } catch (error) {
         console.error("Error creating order:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -73,12 +73,12 @@ router.get("/", isLoggedIn, async (req, res) => {
             user: userId
         }).toArray();
 
-        res.status(200).send({
+        res.status(200).json({
             orders
         });
     } catch (error) {
         console.error("Error retrieving orders:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -97,17 +97,17 @@ router.get("/:orderId", isLoggedIn, async (req, res) => {
         });
 
         if (!order) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Order not found"
             });
         }
 
-        res.status(200).send({
+        res.status(200).json({
             order
         });
     } catch (error) {
         console.error("Error retrieving order details:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -133,17 +133,17 @@ router.put("/:orderId", isLoggedIn, async (req, res) => {
         });
 
         if (result.matchedCount === 0) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Order not found"
             });
         }
 
-        res.status(200).send({
+        res.status(200).json({
             message: "Order status updated successfully"
         });
     } catch (error) {
         console.error("Error updating order status:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -162,17 +162,17 @@ router.delete("/:orderId", isLoggedIn, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Order not found"
             });
         }
 
-        res.status(200).send({
+        res.status(200).json({
             message: "Order canceled successfully"
         });
     } catch (error) {
         console.error("Error canceling order:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }

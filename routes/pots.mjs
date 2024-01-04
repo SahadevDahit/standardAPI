@@ -70,13 +70,13 @@ router.get("/", isLoggedIn, async (req, res) => {
 });
 
 // GET endpoint to retrieve details of a specific pot
-router.get("/:send", isLoggedIn, async (req, res) => {
+router.get("/:json", isLoggedIn, async (req, res) => {
     try {
-        const send = new ObjectId(req.params.send);
+        const json = new ObjectId(req.params.json);
 
         // Retrieve the pot details
         const pot = await db.collection("pots").findOne({
-            _id: send
+            _id: json
         });
 
         if (!pot) {
@@ -97,9 +97,9 @@ router.get("/:send", isLoggedIn, async (req, res) => {
 });
 
 // PUT endpoint to update the details of a specific pot
-router.put("/:send", isLoggedIn, async (req, res) => {
+router.put("/:json", isLoggedIn, async (req, res) => {
     try {
-        const send = new ObjectId(req.params.send);
+        const json = new ObjectId(req.params.json);
         const {
             name,
             price
@@ -107,7 +107,7 @@ router.put("/:send", isLoggedIn, async (req, res) => {
 
         // Update the details of the pot
         const result = await db.collection("pots").updateOne({
-            _id: send
+            _id: json
         }, {
             $set: {
                 name,
@@ -133,13 +133,13 @@ router.put("/:send", isLoggedIn, async (req, res) => {
 });
 
 // DELETE endpoint to remove a specific pot
-router.delete("/:send", isLoggedIn, async (req, res) => {
+router.delete("/:json", isLoggedIn, async (req, res) => {
     try {
-        const send = new ObjectId(req.params.send);
+        const json = new ObjectId(req.params.json);
 
         // Remove the pot
         const result = await db.collection("pots").deleteOne({
-            _id: send
+            _id: json
         });
 
         if (result.deletedCount === 0) {

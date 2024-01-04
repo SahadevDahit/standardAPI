@@ -32,12 +32,12 @@ router.get("/", isLoggedIn, async (req, res) => {
             })
         );
 
-        res.status(200).send({
+        res.status(200).json({
             bookmarks: populatedBookmarks
         });
     } catch (error) {
         console.error("Error retrieving nursery bookmarks:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -53,7 +53,7 @@ router.post("/:nurseryId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (!nursery) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Nursery not found"
             });
         }
@@ -65,7 +65,7 @@ router.post("/:nurseryId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (existingBookmark) {
-            return res.status(400).send({
+            return res.status(400).json({
                 message: "Nursery already bookmarked"
             });
         }
@@ -77,12 +77,12 @@ router.post("/:nurseryId/bookmarks", isLoggedIn, async (req, res) => {
             type: "nursery"
         });
 
-        res.status(204).send({
+        res.status(204).json({
             message: "Nursery bookmarked successfully"
         });
     } catch (error) {
         console.error("Error adding nursery bookmark:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -98,7 +98,7 @@ router.delete("/:nurseryId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (!nursery) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Nursery not found"
             });
         }
@@ -111,17 +111,17 @@ router.delete("/:nurseryId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Nursery bookmark not found"
             });
         }
 
-        res.status(200).send({
+        res.status(200).json({
             message: "Nursery bookmark removed successfully"
         });
     } catch (error) {
         console.error("Error removing nursery bookmark:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }

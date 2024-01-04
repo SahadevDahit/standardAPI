@@ -21,7 +21,7 @@ router.post("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (!plant) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found"
             });
         }
@@ -34,7 +34,7 @@ router.post("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (existingBookmark) {
-            return res.status(400).send({
+            return res.status(400).json({
                 message: "Plant already bookmarked"
             });
         }
@@ -46,12 +46,12 @@ router.post("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
             type: "plant"
         });
 
-        res.status(204).send({
+        res.status(204).json({
             message: "Plant bookmarked successfully"
         });
     } catch (error) {
         console.error("Error adding plant bookmark:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -69,7 +69,7 @@ router.delete("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (!plant) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant not found"
             });
         }
@@ -82,17 +82,17 @@ router.delete("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).send({
+            return res.status(404).json({
                 message: "Plant bookmark not found"
             });
         }
 
-        res.status(200).send({
+        res.status(200).json({
             message: "Plant bookmark removed successfully"
         });
     } catch (error) {
         console.error("Error removing plant bookmark:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }
@@ -122,12 +122,12 @@ router.get("/", isLoggedIn, async (req, res) => {
             })
         );
 
-        res.status(200).send({
+        res.status(200).json({
             bookmarks: populatedBookmarks
         });
     } catch (error) {
         console.error("Error retrieving plant bookmarks:", error);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error"
         });
     }

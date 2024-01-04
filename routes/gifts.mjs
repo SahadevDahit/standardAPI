@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// POST endpoint to send a gift
+// POST endpoint to json a gift
 router.post("/", isLoggedIn, async (req, res) => {
     try {
         const userId = new ObjectId(req.userAuthId);
@@ -38,7 +38,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 
         res.status(201).end();
     } catch (error) {
-        console.error("Error sending gift:", error);
+        console.error("Error jsoning gift:", error);
         res.status(500).end();
     }
 });
@@ -70,7 +70,7 @@ router.get("/", isLoggedIn, async (req, res) => {
             })
         );
 
-        res.status(200).send(populatedGifts);
+        res.status(200).json(populatedGifts);
     } catch (error) {
         console.error("Error retrieving gifts:", error);
         res.status(500).end();

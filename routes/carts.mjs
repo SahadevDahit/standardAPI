@@ -69,7 +69,7 @@ router.get("/", isLoggedIn, async (req, res) => {
         // Extract plants into a separate array
         const plants = populatedCartItems.map(cartItem => cartItem.plant);
 
-        res.status(200).send(plants);
+        res.status(200).json(plants);
     } catch (error) {
         console.error("Error retrieving shopping cart:", error);
         res.status(500).end();
