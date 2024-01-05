@@ -44,14 +44,16 @@ router.get("/:id", async (req, res) => {
         }
     } catch (error) {
         console.error("Error fetching category:", error);
-        res.status(500).end();
+        res.status(500).json({
+            "message": "error in fetching category"
+        });
     }
 });
 
 // Add a new category
 router.post("/", isLoggedIn, async (req, res) => {
     try {
-        const collection = await db.collection("categories");
+        const collection = db.collection("categories");
         const {
             name
         } = req.body;
@@ -62,7 +64,9 @@ router.post("/", isLoggedIn, async (req, res) => {
         });
 
         if (existingCategory) {
-            return res.status(400).end();
+            return res.status(400).json({
+                "message": "category already exists"
+            });
         }
 
         const newCategory = {
@@ -73,10 +77,12 @@ router.post("/", isLoggedIn, async (req, res) => {
 
         const result = await collection.insertOne(newCategory);
 
-        res.status(204).json(result);
+        res.status(200).json(newCategory);
     } catch (error) {
         console.error("Error creating category:", error);
-        res.status(500).end();
+        res.status(500).json({
+            "message": "error creating category"
+        });
     }
 });
 
@@ -114,7 +120,9 @@ router.put("/:id", async (req, res) => {
         res.status(200).json(updatedCategory);
     } catch (error) {
         console.error("Error updating category:", error);
-        res.status(500).end();
+        res.status(500).json({
+            "message": "error updating category"
+        });
     }
 });
 
@@ -128,13 +136,19 @@ router.delete("/:id", isLoggedIn, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).end();
+            return res.status(404).json({
+                "message": "Not found"
+            });
         }
 
-        res.status(200).end();
+        res.status(200).json({
+            "message": "sucessfully deleted"
+        });
     } catch (error) {
         console.error("Error deleting category:", error);
-        res.status(500).end();
+        res.status(500).json({
+            "message": "error deleting category"
+        });
     }
 });
 

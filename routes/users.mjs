@@ -80,13 +80,10 @@ router.post('/login', async (req, res) => {
         // Generate a token for the user
         const token = generateToken(user._id);
 
-        // Convert the user object into an array
-        const userArray = Object.values(user);
-
         // Return the token and user array
         res.status(200).json({
             token,
-            user: userArray
+            user
         });
     } catch (error) {
         console.error(error);

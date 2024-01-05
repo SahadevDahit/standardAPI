@@ -73,6 +73,27 @@ router.get("/:id", async (req, res) => {
         });
     }
 });
+// Get a list of plants by partial name match
+router.get("/search/:partialName", async (req, res) => {
+    try {
+        const collection = await db.collection("plants");
+        const partialName = req.params.partialName;
+
+        const plants = await collection.find({
+            name: {
+                $regex: new RegExp(partialName, "i") // Case-insensitive partial match
+            }
+        }).toArray();
+
+        res.status(200).json(plants);
+    } catch (error) {
+        console.error("Error fetching plants by partial name:", error);
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+    }
+});
+
 
 // Add a new plant
 router.post("/", isLoggedIn, isAdmin, async (req, res) => {
@@ -88,21 +109,51 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
             quantity
         } = req.body;
 
+        // Check if the provided category_id exists
+        const category = await db.collection("categories").findOne({
+            _id: new ObjectId(category_id)
+        });
+
+        if (!category) {
+            return res.status(404).json({
+                message: "Category not found"
+            });
+        }
+
+        // Check if the provided nursery_id exists
+        let nurseryIdObject = null;
+        if (nursery_id) {
+            const nursery = await db.collection("nurseries").findOne({
+                _id: new ObjectId(nursery_id)
+            });
+
+            if (!nursery) {
+                return res.status(404).json({
+                    message: "Nursery not found"
+                });
+            }
+
+            nurseryIdObject = new ObjectId(nursery_id);
+        }
+
         const newPlant = {
             name,
             description,
             category_id: new ObjectId(category_id),
-            nursery_id: nursery_id ? new ObjectId(nursery_id) : null,
+            nursery_id: nurseryIdObject,
             user: new ObjectId(req.userAuthId),
             images,
             price,
             quantity,
-            plantReviews: [], // Initialize as an empty array
+            plantReviews: [] // Initialize as an empty array
         };
 
         const result = await collection.insertOne(newPlant);
 
-        res.status(204).json(result);
+        res.status(201).json({
+            message: "Plant added successfully",
+            plant: newPlant
+        });
     } catch (error) {
         console.error("Error creating plant:", error);
         res.status(500).json({
@@ -122,7 +173,6 @@ router.put("/:id", isLoggedIn, async (req, res) => {
             category_id,
             nursery_id,
             user,
-            images,
             price,
             quantity
         } = req.body;
@@ -134,7 +184,6 @@ router.put("/:id", isLoggedIn, async (req, res) => {
                 category_id: new ObjectId(category_id),
                 nursery_id: nursery_id ? new ObjectId(nursery_id) : null,
                 user: new ObjectId(user),
-                images,
                 price,
                 quantity
             },
@@ -223,8 +272,9 @@ router.post("/:plantId/reviews", isLoggedIn, async (req, res) => {
             _id: plantId
         }, updateQuery);
 
-        res.status(204).json({
-            message: "Review added successfully"
+        res.status(201).json({
+            message: "Review added successfully",
+            plantReviews
         });
     } catch (error) {
         console.error("Error adding plant review:", error);
@@ -272,7 +322,7 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
             }
         });
 
-        res.status(204).json({
+        res.status(200).json({
             message: "Plant review deleted successfully"
         });
     } catch (error) {

@@ -25,21 +25,30 @@ router.post("/", isLoggedIn, async (req, res) => {
         });
 
         if (!plant) {
-            return res.status(404).end();
+            return res.status(404).json({
+                message: "Plant not found"
+            });
         }
 
         // Add the plant to the user's shopping cart
-        await db.collection("carts").insertOne({
+        const result = await db.collection("carts").insertOne({
             user: userId,
             plant_id: new ObjectId(plant_id),
             address,
             quantity
         });
-
-        res.status(201).end();
+        res.status(201).json({
+            message: "Plant added to the cart successfully",
+            item: userId,
+            plant_id: new ObjectId(plant_id),
+            address,
+            quantity
+        });
     } catch (error) {
         console.error("Error adding plant to cart:", error);
-        res.status(500).end();
+        res.status(500).json({
+            message: "Error adding plant to cart"
+        });
     }
 });
 
@@ -53,29 +62,39 @@ router.get("/", isLoggedIn, async (req, res) => {
             user: userId
         }).toArray();
 
-        // Populate additional details from the "plants" collection
-        const populatedCartItems = await Promise.all(
-            cartItems.map(async (cartItem) => {
-                const plant = await db.collection("plants").findOne({
-                    _id: cartItem.plant_id
-                });
-                return {
-                    ...cartItem,
-                    plant
-                };
-            })
-        );
 
-        // Extract plants into a separate array
-        const plants = populatedCartItems.map(cartItem => cartItem.plant);
-
-        res.status(200).json(plants);
+        res.status(200).json(cartItems);
     } catch (error) {
         console.error("Error retrieving shopping cart:", error);
         res.status(500).end();
     }
 });
+// GET endpoint to retrieve a specific cart by cartId
+router.get("/:cartId", isLoggedIn, async (req, res) => {
+    try {
+        const userId = new ObjectId(req.userAuthId);
+        const cartId = new ObjectId(req.params.cartId);
 
+        // Retrieve the specific cart
+        const cartItem = await db.collection("carts").findOne({
+            _id: cartId,
+            user: userId
+        });
+
+        if (!cartItem) {
+            return res.status(404).json({
+                message: "Cart not found"
+            });
+        }
+
+        res.status(200).json(cartItem);
+    } catch (error) {
+        console.error("Error retrieving cart by cartId:", error);
+        res.status(500).json({
+            message: "Error retrieving cart by cartId"
+        });
+    }
+});
 // PUT endpoint to update a plant in the user's shopping cart
 router.put("/:cartId", isLoggedIn, async (req, res) => {
     try {
@@ -98,13 +117,22 @@ router.put("/:cartId", isLoggedIn, async (req, res) => {
         });
 
         if (result.matchedCount === 0) {
-            return res.status(404).end();
+            return res.status(404).json({
+                "message": "not found"
+            });
         }
 
-        res.status(200).end();
+        res.status(200).json({
+            address,
+            quantity,
+            userId,
+            cartId
+        });
     } catch (error) {
         console.error("Error updating shopping cart item:", error);
-        res.status(500).end();
+        res.status(500).json({
+            "message": "error updating cart item"
+        });
     }
 });
 
@@ -121,13 +149,19 @@ router.delete("/:cartId", isLoggedIn, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).end();
+            return res.status(404).json({
+                "message": "not found"
+            });
         }
 
-        res.status(200).end();
+        res.status(200).json({
+            "message": "sucessfully deleted"
+        });
     } catch (error) {
         console.error("Error removing plant from cart:", error);
-        res.status(500).end();
+        res.status(500).json({
+            "message": "Error removing plant from cart"
+        });
     }
 });
 

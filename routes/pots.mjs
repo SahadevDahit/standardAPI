@@ -70,9 +70,9 @@ router.get("/", isLoggedIn, async (req, res) => {
 });
 
 // GET endpoint to retrieve details of a specific pot
-router.get("/:json", isLoggedIn, async (req, res) => {
+router.get("/:id", isLoggedIn, async (req, res) => {
     try {
-        const json = new ObjectId(req.params.json);
+        const json = new ObjectId(req.params.id);
 
         // Retrieve the pot details
         const pot = await db.collection("pots").findOne({
@@ -97,9 +97,9 @@ router.get("/:json", isLoggedIn, async (req, res) => {
 });
 
 // PUT endpoint to update the details of a specific pot
-router.put("/:json", isLoggedIn, async (req, res) => {
+router.put("/:id", isLoggedIn, async (req, res) => {
     try {
-        const json = new ObjectId(req.params.json);
+        const id = new ObjectId(req.params.id);
         const {
             name,
             price
@@ -107,7 +107,7 @@ router.put("/:json", isLoggedIn, async (req, res) => {
 
         // Update the details of the pot
         const result = await db.collection("pots").updateOne({
-            _id: json
+            _id: id
         }, {
             $set: {
                 name,
@@ -122,7 +122,9 @@ router.put("/:json", isLoggedIn, async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Pot details updated successfully"
+            message: "Pot details updated successfully",
+            name,
+            price
         });
     } catch (error) {
         console.error("Error updating pot details:", error);
@@ -133,13 +135,13 @@ router.put("/:json", isLoggedIn, async (req, res) => {
 });
 
 // DELETE endpoint to remove a specific pot
-router.delete("/:json", isLoggedIn, async (req, res) => {
+router.delete("/:id", isLoggedIn, async (req, res) => {
     try {
-        const json = new ObjectId(req.params.json);
+        const id = new ObjectId(req.params.id);
 
         // Remove the pot
         const result = await db.collection("pots").deleteOne({
-            _id: json
+            _id: id
         });
 
         if (result.deletedCount === 0) {

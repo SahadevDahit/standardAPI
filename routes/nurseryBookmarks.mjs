@@ -77,8 +77,10 @@ router.post("/:nurseryId/bookmarks", isLoggedIn, async (req, res) => {
             type: "nursery"
         });
 
-        res.status(204).json({
-            message: "Nursery bookmarked successfully"
+        res.status(201).json({
+            message: "Nursery bookmarked successfully",
+            nursery_id: nurseryId,
+            type: "nursery"
         });
     } catch (error) {
         console.error("Error adding nursery bookmark:", error);

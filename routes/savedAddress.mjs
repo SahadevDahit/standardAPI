@@ -138,7 +138,8 @@ router.put("/:addressId", isLoggedIn, async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Saved address details updated successfully"
+            message: "Saved address details updated successfully",
+            "savedAddress": req.body
         });
     } catch (error) {
         console.error("Error updating saved address details:", error);

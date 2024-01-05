@@ -46,8 +46,9 @@ router.post("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
             type: "plant"
         });
 
-        res.status(204).json({
-            message: "Plant bookmarked successfully"
+        res.status(201).json({
+            message: "Plant bookmarked successfully",
+            plantId
         });
     } catch (error) {
         console.error("Error adding plant bookmark:", error);

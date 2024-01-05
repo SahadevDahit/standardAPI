@@ -3,6 +3,7 @@ import cors from "cors";
 import "./loadEnviroment.mjs";
 import "express-async-errors";
 import helmet from 'helmet';
+import bodyParser from 'body-parser'; // Import body-parser
 import users from "./routes/users.mjs";
 import categories from "./routes/categories.mjs";
 import nurseries from "./routes/nurseries.mjs";
@@ -19,15 +20,13 @@ const app = express();
 const PORT = process.env.PORT || 2024;
 app.disable('x-powered-by');
 app.use(cors());
-app.use(helmet())
-//pass incoming data
-app.use(express.json());
-//url encoded
-app.use(express.urlencoded({
+app.use(helmet());
+
+// Use body-parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-
 
 //routes
 app.use("/users", users);
@@ -44,12 +43,12 @@ app.use("/savedAddress", savedAddress);
 
 app.get("/", (req, res) => {
     res.status(200).send("Welcome to the server.....")
-})
+});
 
 // Global error handling
 app.use((err, _req, res, next) => {
-    res.status(500).send("Uh oh! An unexpected error occured.")
-})
+    res.status(500).send("Uh oh! An unexpected error occurred.");
+});
 
 // start the Express server
 app.listen(PORT, () => {

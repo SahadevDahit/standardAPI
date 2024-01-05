@@ -25,7 +25,9 @@ router.post("/", isLoggedIn, async (req, res) => {
         });
 
         if (!nursery) {
-            return res.status(404).end();
+            return res.status(404).json({
+                message: "Nursery not found"
+            });
         }
 
         // Add the gift
@@ -36,10 +38,16 @@ router.post("/", isLoggedIn, async (req, res) => {
             message
         });
 
-        res.status(201).end();
+        res.status(201).json({
+            type,
+            nursery_id,
+            message
+        });
     } catch (error) {
-        console.error("Error jsoning gift:", error);
-        res.status(500).end();
+        console.error("Error adding gift:", error);
+        res.status(500).json({
+            message: "Error adding gift"
+        });
     }
 });
 
@@ -73,7 +81,36 @@ router.get("/", isLoggedIn, async (req, res) => {
         res.status(200).json(populatedGifts);
     } catch (error) {
         console.error("Error retrieving gifts:", error);
-        res.status(500).end();
+        res.status(500).json({
+            message: "Error retrieving gifts"
+        });
+    }
+});
+
+// GET endpoint to retrieve a specific gift by its ID
+router.get("/:giftId", isLoggedIn, async (req, res) => {
+    try {
+        const userId = new ObjectId(req.userAuthId);
+        const giftId = new ObjectId(req.params.giftId);
+
+        // Retrieve the specific gift
+        const gift = await db.collection("gifts").findOne({
+            _id: giftId,
+            user: userId
+        });
+
+        if (!gift) {
+            return res.status(404).json({
+                message: "Gift not found"
+            });
+        }
+
+        res.status(200).json(gift);
+    } catch (error) {
+        console.error("Error retrieving gift by ID:", error);
+        res.status(500).json({
+            message: "Error retrieving gift by ID"
+        });
     }
 });
 
@@ -90,7 +127,9 @@ router.delete("/:giftId", isLoggedIn, async (req, res) => {
         });
 
         if (!gift) {
-            return res.status(404).end();
+            return res.status(404).json({
+                message: "Gift not found"
+            });
         }
 
         // Remove the gift
@@ -100,13 +139,19 @@ router.delete("/:giftId", isLoggedIn, async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).end();
+            return res.status(404).json({
+                message: "Gift not found"
+            });
         }
 
-        res.status(200).end();
+        res.status(200).json({
+            message: "Successfully deleted"
+        });
     } catch (error) {
         console.error("Error removing gift:", error);
-        res.status(500).end();
+        res.status(500).json({
+            message: "Error removing gift"
+        });
     }
 });
 

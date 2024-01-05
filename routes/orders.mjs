@@ -139,7 +139,8 @@ router.put("/:orderId", isLoggedIn, async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Order status updated successfully"
+            message: "Order status updated successfully",
+            "order": req.body
         });
     } catch (error) {
         console.error("Error updating order status:", error);
