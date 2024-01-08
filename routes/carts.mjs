@@ -21,12 +21,13 @@ router.post("/", isLoggedIn, async (req, res) => {
 
         // Check if the plant exists
         const plant = await db.collection("plants").findOne({
-            _id: new ObjectId(plant_id)
+            _id: new ObjectId(plant_id),
         });
 
         if (!plant) {
             return res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         }
 
@@ -35,19 +36,21 @@ router.post("/", isLoggedIn, async (req, res) => {
             user: userId,
             plant_id: new ObjectId(plant_id),
             address,
-            quantity
+            quantity,
         });
         res.status(201).json({
+            code: 1,
             message: "Plant added to the cart successfully",
-            item: userId,
-            plant_id: new ObjectId(plant_id),
-            address,
-            quantity
+            data: {
+                _id: result.insertedId,
+                ...req.body
+            },
         });
     } catch (error) {
         console.error("Error adding plant to cart:", error);
         res.status(500).json({
-            message: "Error adding plant to cart"
+            code: 0,
+            message: "Error adding plant to cart",
         });
     }
 });
@@ -59,16 +62,23 @@ router.get("/", isLoggedIn, async (req, res) => {
 
         // Retrieve the user's shopping cart
         const cartItems = await db.collection("carts").find({
-            user: userId
+            user: userId,
         }).toArray();
 
-
-        res.status(200).json(cartItems);
+        res.status(200).json({
+            code: 1,
+            message: "Successfully retrieved shopping cart",
+            data: cartItems,
+        });
     } catch (error) {
         console.error("Error retrieving shopping cart:", error);
-        res.status(500).end();
+        res.status(500).json({
+            code: 0,
+            message: "Error retrieving shopping cart",
+        });
     }
 });
+
 // GET endpoint to retrieve a specific cart by cartId
 router.get("/:cartId", isLoggedIn, async (req, res) => {
     try {
@@ -78,23 +88,30 @@ router.get("/:cartId", isLoggedIn, async (req, res) => {
         // Retrieve the specific cart
         const cartItem = await db.collection("carts").findOne({
             _id: cartId,
-            user: userId
+            user: userId,
         });
 
         if (!cartItem) {
             return res.status(404).json({
-                message: "Cart not found"
+                code: -1,
+                message: "Cart not found",
             });
         }
 
-        res.status(200).json(cartItem);
+        res.status(200).json({
+            code: 1,
+            message: "Successfully retrieved cart by cartId",
+            data: cartItem,
+        });
     } catch (error) {
         console.error("Error retrieving cart by cartId:", error);
         res.status(500).json({
-            message: "Error retrieving cart by cartId"
+            code: 0,
+            message: "Error retrieving cart by cartId",
         });
     }
 });
+
 // PUT endpoint to update a plant in the user's shopping cart
 router.put("/:cartId", isLoggedIn, async (req, res) => {
     try {
@@ -108,30 +125,36 @@ router.put("/:cartId", isLoggedIn, async (req, res) => {
         // Update the plant in the user's shopping cart
         const result = await db.collection("carts").updateOne({
             _id: cartId,
-            user: userId
+            user: userId,
         }, {
             $set: {
                 address,
-                quantity
-            }
+                quantity,
+            },
         });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
-                "message": "not found"
+                code: -1,
+                message: "Cart item not found",
             });
         }
 
         res.status(200).json({
-            address,
-            quantity,
-            userId,
-            cartId
+            code: 1,
+            message: "Successfully updated shopping cart item",
+            data: {
+                address,
+                quantity,
+                userId,
+                cartId,
+            },
         });
     } catch (error) {
         console.error("Error updating shopping cart item:", error);
         res.status(500).json({
-            "message": "error updating cart item"
+            code: 0,
+            message: "Error updating cart item",
         });
     }
 });
@@ -145,22 +168,25 @@ router.delete("/:cartId", isLoggedIn, async (req, res) => {
         // Remove the plant from the user's shopping cart
         const result = await db.collection("carts").deleteOne({
             _id: cartId,
-            user: userId
+            user: userId,
         });
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
-                "message": "not found"
+                code: -1,
+                message: "Cart item not found",
             });
         }
 
         res.status(200).json({
-            "message": "sucessfully deleted"
+            code: 1,
+            message: "Successfully deleted cart item",
         });
     } catch (error) {
         console.error("Error removing plant from cart:", error);
         res.status(500).json({
-            "message": "Error removing plant from cart"
+            code: 0,
+            message: "Error removing plant from cart",
         });
     }
 });

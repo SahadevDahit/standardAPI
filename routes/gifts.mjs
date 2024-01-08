@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// POST endpoint to json a gift
+// POST endpoint to create a gift
 router.post("/", isLoggedIn, async (req, res) => {
     try {
         const userId = new ObjectId(req.userAuthId);
@@ -26,12 +26,13 @@ router.post("/", isLoggedIn, async (req, res) => {
 
         if (!nursery) {
             return res.status(404).json({
+                code: -1,
                 message: "Nursery not found"
             });
         }
 
         // Add the gift
-        await db.collection("gifts").insertOne({
+        const result = await db.collection("gifts").insertOne({
             user: userId,
             type,
             nursery_id: new ObjectId(nursery_id),
@@ -39,13 +40,19 @@ router.post("/", isLoggedIn, async (req, res) => {
         });
 
         res.status(201).json({
-            type,
-            nursery_id,
-            message
+            code: 1,
+            message: "Gift added successfully",
+            data: {
+                _id: result.insertedId,
+                type,
+                nursery_id,
+                message
+            }
         });
     } catch (error) {
         console.error("Error adding gift:", error);
         res.status(500).json({
+            code: 0,
             message: "Error adding gift"
         });
     }
@@ -78,10 +85,15 @@ router.get("/", isLoggedIn, async (req, res) => {
             })
         );
 
-        res.status(200).json(populatedGifts);
+        res.status(200).json({
+            code: 1,
+            message: "Gifts retrieved successfully",
+            data: populatedGifts
+        });
     } catch (error) {
         console.error("Error retrieving gifts:", error);
         res.status(500).json({
+            code: 0,
             message: "Error retrieving gifts"
         });
     }
@@ -101,14 +113,20 @@ router.get("/:giftId", isLoggedIn, async (req, res) => {
 
         if (!gift) {
             return res.status(404).json({
+                code: -1,
                 message: "Gift not found"
             });
         }
 
-        res.status(200).json(gift);
+        res.status(200).json({
+            code: 1,
+            message: "Gift retrieved successfully",
+            data: gift
+        });
     } catch (error) {
         console.error("Error retrieving gift by ID:", error);
         res.status(500).json({
+            code: 0,
             message: "Error retrieving gift by ID"
         });
     }
@@ -128,6 +146,7 @@ router.delete("/:giftId", isLoggedIn, async (req, res) => {
 
         if (!gift) {
             return res.status(404).json({
+                code: -1,
                 message: "Gift not found"
             });
         }
@@ -140,16 +159,19 @@ router.delete("/:giftId", isLoggedIn, async (req, res) => {
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
+                code: -1,
                 message: "Gift not found"
             });
         }
 
         res.status(200).json({
-            message: "Successfully deleted"
+            code: 1,
+            message: "Gift successfully deleted"
         });
     } catch (error) {
         console.error("Error removing gift:", error);
         res.status(500).json({
+            code: 0,
             message: "Error removing gift"
         });
     }

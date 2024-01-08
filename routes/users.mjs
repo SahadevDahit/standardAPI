@@ -11,17 +11,15 @@ import {
 import {
     isAdmin
 } from "../middlewares/isAdmin.mjs";
+
 const router = express.Router();
 
-
-//get user by id
+// get user by id
 router.get("/", isLoggedIn, async (req, res) => {
     try {
-
         let query = {
-            _id: new ObjectId(req.userAuthId)
+            _id: new ObjectId(req.userAuthId),
         };
-
 
         // Ensure the collection name is correct
         let collection = await db.collection("users");
@@ -31,23 +29,27 @@ router.get("/", isLoggedIn, async (req, res) => {
 
         if (!result) {
             return res.status(404).json({
-                message: "User not found"
+                code: -1,
+                message: "User not found",
             });
         }
-        // Convert result to an array
-        result = [result];
 
-        res.status(200).json(result);
+        res.status(200).json({
+            code: 1,
+            message: "User found successfully",
+            data: result,
+        });
     } catch (error) {
         console.error("Error in user route:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
 
-//login user
-router.post('/login', async (req, res) => {
+// login user
+router.post("/login", async (req, res) => {
     try {
         const collection = await db.collection("users");
         const {
@@ -57,13 +59,14 @@ router.post('/login', async (req, res) => {
 
         // Find the user with the provided email
         const user = await collection.findOne({
-            email
+            email,
         });
 
         // Check if the user exists
         if (!user) {
             return res.status(401).json({
-                message: "Invalid email or password"
+                code: -1,
+                message: "Invalid email or password",
             });
         }
 
@@ -73,7 +76,8 @@ router.post('/login', async (req, res) => {
         // Check if the passwords match
         if (!passwordMatch) {
             return res.status(401).json({
-                message: "Invalid email or password"
+                code: -1,
+                message: "Invalid email or password",
             });
         }
 
@@ -82,17 +86,21 @@ router.post('/login', async (req, res) => {
 
         // Return the token and user array
         res.status(200).json({
-            token,
-            user
+            code: 1,
+            message: "Login successful",
+            data: {
+                user,
+                token,
+            },
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
-
 
 // register a user
 router.post("/", async (req, res) => {
@@ -101,11 +109,12 @@ router.post("/", async (req, res) => {
 
         // Check if the user with the provided email already exists
         const existingUser = await collection.findOne({
-            email: req.body.email
+            email: req.body.email,
         });
         if (existingUser) {
             return res.status(400).json({
-                message: "User with this email already exists"
+                code: -1,
+                message: "User with this email already exists",
             });
         }
 
@@ -123,12 +132,16 @@ router.post("/", async (req, res) => {
 
         // Insert a new document only if the user with the provided email doesn't exist
         const result = await collection.insertOne(newDocument);
-
-        res.json(newDocument).status(204); // Return the inserted user details without password
+        res.status(201).json({
+            code: 1,
+            message: "User registered successfully",
+            data: req.body, // Return the inserted user details without password
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -151,6 +164,21 @@ router.put("/", isLoggedIn, async (req, res) => {
             status
         } = req.body;
 
+        // Check if the new email is already in use by another user
+        const existingUser = await collection.findOne({
+            email,
+            _id: {
+                $ne: email
+            }, // Exclude the current user from the check
+        });
+
+        if (existingUser) {
+            return res.status(400).json({
+                code: -1,
+                message: "Email is already in use by another user",
+            });
+        }
+
         // Create the update query
         const updateQuery = {
             $set: {
@@ -159,7 +187,7 @@ router.put("/", isLoggedIn, async (req, res) => {
                 lastName,
                 phoneNo,
                 isAdmin,
-                status
+                status,
             },
         };
 
@@ -171,7 +199,8 @@ router.put("/", isLoggedIn, async (req, res) => {
         if (result.modifiedCount === 0) {
             // No user was updated
             return res.status(404).json({
-                message: "User not found or no changes applied"
+                code: -1,
+                message: "User not found or no changes applied",
             });
         }
 
@@ -180,22 +209,25 @@ router.put("/", isLoggedIn, async (req, res) => {
             _id: userId
         });
 
-        res.status(200).json(updatedUser);
+        res.status(200).json({
+            code: 1,
+            message: "User profile updated successfully",
+            data: updatedUser,
+        });
     } catch (error) {
         console.error("Error updating user profile:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
-
-
 
 // Delete user
 router.delete("/", isLoggedIn, isAdmin, async (req, res) => {
     try {
         const query = {
-            _id: ObjectId(req.userAuthId)
+            _id: ObjectId(req.userAuthId),
         };
 
         const collection = await db.collection("users");
@@ -207,26 +239,30 @@ router.delete("/", isLoggedIn, isAdmin, async (req, res) => {
             if (result.deletedCount === 0) {
                 // If no document was deleted, send a 404 response
                 return res.status(404).json({
-                    message: "User not found"
+                    code: -1,
+                    message: "User not found",
                 });
             }
 
             // Document deleted successfully
             res.status(200).json({
-                message: "User deleted successfully"
+                code: 1,
+                message: "User deleted successfully",
             });
         } catch (deleteError) {
             // Handle specific error cases if needed
             console.error("Error deleting user:", deleteError);
             res.status(500).json({
-                message: "Error deleting user"
+                code: 0,
+                message: "Error deleting user",
             });
         }
     } catch (error) {
         // Handle any errors that occur before reaching the deletion logic
         console.error("Error in delete route:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });

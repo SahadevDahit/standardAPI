@@ -40,7 +40,7 @@ router.post("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
         }
 
         // Add the bookmark
-        await db.collection("plantsBookmarks").insertOne({
+        const result = await db.collection("plantsBookmarks").insertOne({
             user: userId,
             plant_id: plantId,
             type: "plant"
@@ -48,7 +48,10 @@ router.post("/:plantId/bookmarks", isLoggedIn, async (req, res) => {
 
         res.status(201).json({
             message: "Plant bookmarked successfully",
-            plantId
+            data: {
+                _id: result.insertedId,
+                plantId,
+            }
         });
     } catch (error) {
         console.error("Error adding plant bookmark:", error);
@@ -133,4 +136,5 @@ router.get("/", isLoggedIn, async (req, res) => {
         });
     }
 });
+
 export default router;

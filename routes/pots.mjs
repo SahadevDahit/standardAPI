@@ -20,12 +20,13 @@ router.post("/", isLoggedIn, async (req, res) => {
 
         // Check if the plant exists
         const plant = await db.collection("plants").findOne({
-            _id: new ObjectId(plant_id)
+            _id: new ObjectId(plant_id),
         });
 
         if (!plant) {
             return res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         }
 
@@ -33,20 +34,24 @@ router.post("/", isLoggedIn, async (req, res) => {
         const pot = {
             plant_id: new ObjectId(plant_id),
             name,
-            price
+            price,
         };
 
         // Save the pot to the database
         await db.collection("pots").insertOne(pot);
 
         res.status(201).json({
+            code: 1,
             message: "Pot created successfully",
-            pot
+            data: {
+                pot
+            },
         });
     } catch (error) {
         console.error("Error creating pot:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -54,17 +59,21 @@ router.post("/", isLoggedIn, async (req, res) => {
 // GET endpoint to retrieve pots for a specific plant
 router.get("/", isLoggedIn, async (req, res) => {
     try {
-
         // Retrieve pots for the specific plant
         const pots = await db.collection("pots").find().toArray();
 
         res.status(200).json({
-            pots
+            code: 1,
+            message: "Pots retrieved successfully",
+            data: {
+                pots
+            },
         });
     } catch (error) {
         console.error("Error retrieving pots:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -76,22 +85,28 @@ router.get("/:id", isLoggedIn, async (req, res) => {
 
         // Retrieve the pot details
         const pot = await db.collection("pots").findOne({
-            _id: json
+            _id: json,
         });
 
         if (!pot) {
             return res.status(404).json({
-                message: "Pot not found"
+                code: -1,
+                message: "Pot not found",
             });
         }
 
         res.status(200).json({
-            pot
+            code: 1,
+            message: "Pot details retrieved successfully",
+            data: {
+                pot
+            },
         });
     } catch (error) {
         console.error("Error retrieving pot details:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -111,25 +126,29 @@ router.put("/:id", isLoggedIn, async (req, res) => {
         }, {
             $set: {
                 name,
-                price
-            }
+                price,
+            },
         });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
-                message: "Pot not found"
+                code: -1,
+                message: "Pot not found",
             });
         }
-
         res.status(200).json({
+            code: 1,
             message: "Pot details updated successfully",
-            name,
-            price
+            data: {
+                name,
+                price
+            },
         });
     } catch (error) {
         console.error("Error updating pot details:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -146,17 +165,20 @@ router.delete("/:id", isLoggedIn, async (req, res) => {
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
-                message: "Pot not found"
+                code: -1,
+                message: "Pot not found",
             });
         }
 
         res.status(200).json({
-            message: "Pot removed successfully"
+            code: 1,
+            message: "Pot removed successfully",
         });
     } catch (error) {
         console.error("Error removing pot:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });

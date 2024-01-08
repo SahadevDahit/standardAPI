@@ -19,6 +19,9 @@ export const isAdmin = async (req, res, next) => {
         }
     } catch (error) {
         console.error("Error in isAdmin middleware:", error);
-        next(new Error("Access denied, admin only")); // You can customize the error message if needed
+        res.status(403).json({
+            code: 0,
+            message: "Access denied, admin only",
+        });
     }
 };

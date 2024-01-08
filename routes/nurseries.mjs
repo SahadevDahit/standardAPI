@@ -8,7 +8,8 @@ import {
 } from "../middlewares/isLoggedIn.mjs";
 import {
     isAdmin
-} from "../middlewares/isAdmin.mjs";
+} from "../middlewares/isAdmin.mjs";;
+
 const router = express.Router();
 
 // Get a list of 50 nurseries with average rating
@@ -25,21 +26,28 @@ router.get("/", async (req, res) => {
                     nurseryReviews: 1,
                     averageRating: {
                         $round: [{
-                            $avg: "$nurseryReviews.rating"
-                        }, 2] // Calculate average rating and round to 2 decimal places
-                    }
-                }
+                                $avg: "$nurseryReviews.rating",
+                            },
+                            2, // Calculate average rating and round to 2 decimal places
+                        ],
+                    },
+                },
             },
             {
-                $limit: 50
-            }
+                $limit: 50,
+            },
         ]).toArray();
 
-        res.status(200).json(results);
+        res.status(200).json({
+            code: 1,
+            message: "Nurseries fetched successfully",
+            data: results,
+        });
     } catch (error) {
         console.error("Error fetching nurseries:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -49,13 +57,14 @@ router.get("/:id", async (req, res) => {
     try {
         const collection = await db.collection("nurseries");
         const query = {
-            _id: new ObjectId(req.params.id)
+            _id: new ObjectId(req.params.id),
         };
         const result = await collection.findOne(query);
 
         if (!result) {
             res.status(404).json({
-                message: "Nursery not found"
+                code: -1,
+                message: "Nursery not found",
             });
         } else {
             // Calculate average rating from nurseryReviews
@@ -63,22 +72,31 @@ router.get("/:id", async (req, res) => {
             const totalReviews = nurseryReviews.length;
 
             if (totalReviews > 0) {
-                const totalRating = nurseryReviews.reduce((sum, review) => sum + review.rating, 0);
+                const totalRating = nurseryReviews.reduce(
+                    (sum, review) => sum + review.rating,
+                    0
+                );
                 const averageRating = totalRating / totalReviews;
                 result.averageRating = averageRating.toFixed(2);
             } else {
                 result.averageRating = 0;
             }
 
-            res.status(200).json(result);
+            res.status(200).json({
+                code: 1,
+                message: "Nursery fetched successfully",
+                data: result,
+            });
         }
     } catch (error) {
         console.error("Error fetching nursery:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
+
 // Get a single nursery by partial name with populated details
 router.get("/search/:partialName", async (req, res) => {
     try {
@@ -87,12 +105,13 @@ router.get("/search/:partialName", async (req, res) => {
 
         const nursery = await collection.findOne({
             name: {
-                $regex: new RegExp(partialName, "i") // Case-insensitive partial match
-            }
+                $regex: new RegExp(partialName, "i"), // Case-insensitive partial match
+            },
         });
 
         if (!nursery) {
             res.status(404).json({
+                code: -1,
                 message: "Nursery not found",
             });
         } else {
@@ -111,11 +130,16 @@ router.get("/search/:partialName", async (req, res) => {
                 nursery.averageRating = 0;
             }
 
-            res.status(200).json(nursery);
+            res.status(200).json({
+                code: 1,
+                message: "Nursery fetched successfully",
+                data: nursery,
+            });
         }
     } catch (error) {
         console.error("Error fetching nursery:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error",
         });
     }
@@ -138,6 +162,7 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
 
         if (existingNursery) {
             return res.status(400).json({
+                code: 0,
                 message: "Nursery with this name already exists",
             });
         }
@@ -149,50 +174,15 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
         };
         await collection.insertOne(newNursery);
         res.status(201).json({
-            newNursery,
+            code: 1,
+            message: "Nursery created successfully",
+            data: newNursery,
         });
     } catch (error) {
         console.error("Error creating nursery:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error",
-        });
-    }
-});
-
-// Add a new nursery
-router.post("/", isLoggedIn, isAdmin, async (req, res) => {
-    try {
-        const collection = await db.collection("nurseries");
-        const {
-            name,
-            time,
-            distance,
-            address
-        } = req.body;
-        // Check if a nursery with the same name already exists
-        const existingNursery = await collection.findOne({
-            name
-        });
-
-        if (existingNursery) {
-            return res.status(400).json({
-                message: "Nursery with this name already exists"
-            });
-        }
-
-        const newNursery = {
-            ...req.body,
-            user: new ObjectId(req.userAuthId),
-            nurseryReviews: [], // Initialize as an empty array
-        };
-        await collection.insertOne(newNursery);
-        res.status(201).json({
-            newNursery
-        });
-    } catch (error) {
-        console.error("Error creating nursery:", error);
-        res.status(500).json({
-            message: "Internal Server Error"
         });
     }
 });
@@ -207,7 +197,7 @@ router.put("/:id", async (req, res) => {
             time,
             distance,
             address,
-            nurseryReviews
+            nurseryReviews,
         } = req.body;
 
         const updateQuery = {
@@ -221,23 +211,31 @@ router.put("/:id", async (req, res) => {
         };
 
         const result = await collection.updateOne({
-            _id: nurseryId
-        }, updateQuery);
+                _id: nurseryId,
+            },
+            updateQuery
+        );
 
         if (result.modifiedCount === 0) {
             return res.status(404).json({
-                message: "Nursery not found or no changes applied"
+                code: -1,
+                message: "Nursery not found or no changes applied",
             });
         }
 
         const updatedNursery = await collection.findOne({
-            _id: nurseryId
+            _id: nurseryId,
         });
-        res.status(200).json(updatedNursery);
+        res.status(200).json({
+            code: 1,
+            message: "Nursery updated successfully",
+            data: updatedNursery,
+        });
     } catch (error) {
         console.error("Error updating nursery:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -248,22 +246,25 @@ router.delete("/:id", isLoggedIn, isAdmin, async (req, res) => {
         const collection = await db.collection("nurseries");
         const nurseryId = new ObjectId(req.params.id);
         const result = await collection.deleteOne({
-            _id: nurseryId
+            _id: nurseryId,
         });
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
-                message: "Nursery not found"
+                code: -1,
+                message: "Nursery not found",
             });
         }
 
         res.status(200).json({
-            message: "Nursery deleted successfully"
+            code: 1,
+            message: "Nursery deleted successfully",
         });
     } catch (error) {
         console.error("Error deleting nursery:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -276,12 +277,13 @@ router.post("/:nurseryId/reviews", isLoggedIn, async (req, res) => {
 
         // Check if the nursery exists
         const existingNursery = await collection.findOne({
-            _id: nurseryId
+            _id: nurseryId,
         });
 
         if (!existingNursery) {
             return res.status(404).json({
-                message: "Nursery not found"
+                code: -1,
+                message: "Nursery not found",
             });
         }
 
@@ -294,32 +296,37 @@ router.post("/:nurseryId/reviews", isLoggedIn, async (req, res) => {
             _id: new ObjectId(),
             user: new ObjectId(req.userAuthId),
             rating: req.body.rating,
-            comment: req.body.comment
+            comment: req.body.comment,
         };
 
         // Update the existing nursery document to include the new review
         const updateQuery = {
             $push: {
-                nurseryReviews: nurseryReview
-            }
+                nurseryReviews: nurseryReview,
+            },
         };
 
         await collection.updateOne({
-            _id: nurseryId
-        }, updateQuery);
+                _id: nurseryId,
+            },
+            updateQuery
+        );
 
         res.status(201).json({
+            code: 1,
             message: "Review added successfully",
-            review: nurseryReview
+            data: {
+                review: nurseryReview
+            },
         });
     } catch (error) {
         console.error("Error adding nursery review:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
-
 
 // Delete a review from a nursery
 router.delete("/:nurseryId/reviews/:reviewId", isLoggedIn, async (req, res) => {
@@ -330,21 +337,25 @@ router.delete("/:nurseryId/reviews/:reviewId", isLoggedIn, async (req, res) => {
 
         // Check if the nursery exists
         const existingNursery = await collection.findOne({
-            _id: nurseryId
+            _id: nurseryId,
         });
         if (!existingNursery) {
             return res.status(404).json({
-                message: "Nursery not found"
+                code: -1,
+                message: "Nursery not found",
             });
         }
 
         // Find the index of the review in the nurseryReviews array
-        const reviewIndex = existingNursery.nurseryReviews.findIndex(review => review._id.equals(reviewId));
+        const reviewIndex = existingNursery.nurseryReviews.findIndex((review) =>
+            review._id.equals(reviewId)
+        );
 
         // Check if the review exists in the nursery
         if (reviewIndex === -1) {
             return res.status(404).json({
-                message: "Review not found in the nursery"
+                code: -1,
+                message: "Review not found in the nursery",
             });
         }
 
@@ -354,21 +365,25 @@ router.delete("/:nurseryId/reviews/:reviewId", isLoggedIn, async (req, res) => {
         // Update the existing nursery document without the deleted review
         const updateQuery = {
             $set: {
-                nurseryReviews: existingNursery.nurseryReviews
-            }
+                nurseryReviews: existingNursery.nurseryReviews,
+            },
         };
 
         await collection.updateOne({
-            _id: nurseryId
-        }, updateQuery);
+                _id: nurseryId,
+            },
+            updateQuery
+        );
 
         res.status(200).json({
-            message: "Review deleted successfully"
+            code: 1,
+            message: "Review deleted successfully",
         });
     } catch (error) {
         console.error("Error deleting nursery review:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });

@@ -8,8 +8,12 @@ const client = new MongoClient(connectionString);
 let conn;
 try {
     conn = await client.connect();
-} catch (e) {
-    console.error(e);
+} catch (error) {
+    console.error(error);
+    throw {
+        code: 0,
+        message: error.message ? error.message : "Database connection error",
+    };
 }
 
 let db = conn.db("nurseries_db");

@@ -36,15 +36,20 @@ router.post("/", isLoggedIn, async (req, res) => {
         };
 
         // Save the address to the database
-        await db.collection("savedAddresses").insertOne(savedAddress);
+        const result = await db.collection("savedAddresses").insertOne(savedAddress);
 
         res.status(201).json({
+            code: 1,
             message: "Saved address created successfully",
-            savedAddress
+            data: {
+                _id: result.insertedId,
+                ...savedAddress
+            }
         });
     } catch (error) {
         console.error("Error creating saved address:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error"
         });
     }
@@ -61,11 +66,16 @@ router.get("/", isLoggedIn, async (req, res) => {
         }).toArray();
 
         res.status(200).json({
-            savedAddresses
+            code: 1,
+            message: "Saved addresses retrieved successfully",
+            data: {
+                savedAddresses
+            }
         });
     } catch (error) {
         console.error("Error retrieving saved addresses:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error"
         });
     }
@@ -85,16 +95,22 @@ router.get("/:addressId", isLoggedIn, async (req, res) => {
 
         if (!savedAddress) {
             return res.status(404).json({
+                code: -1,
                 message: "Saved address not found"
             });
         }
 
         res.status(200).json({
-            savedAddress
+            code: 1,
+            message: "Saved address details retrieved successfully",
+            data: {
+                savedAddress
+            }
         });
     } catch (error) {
         console.error("Error retrieving saved address details:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error"
         });
     }
@@ -133,17 +149,22 @@ router.put("/:addressId", isLoggedIn, async (req, res) => {
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
+                code: -1,
                 message: "Saved address not found"
             });
         }
 
         res.status(200).json({
+            code: 1,
             message: "Saved address details updated successfully",
-            "savedAddress": req.body
+            data: {
+                savedAddress: req.body
+            }
         });
     } catch (error) {
         console.error("Error updating saved address details:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error"
         });
     }
@@ -163,16 +184,19 @@ router.delete("/:addressId", isLoggedIn, async (req, res) => {
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
+                code: -1,
                 message: "Saved address not found"
             });
         }
 
         res.status(200).json({
+            code: 1,
             message: "Saved address removed successfully"
         });
     } catch (error) {
         console.error("Error removing saved address:", error);
         res.status(500).json({
+            code: 0,
             message: "Internal Server Error"
         });
     }

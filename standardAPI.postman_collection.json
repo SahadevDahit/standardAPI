@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\":\"sahadev\",\r\n    \"lastName\":\"dahit\",\r\n    \"email\":\"dahit@gmail.com\",\r\n    \"password\":\"hunk\",\r\n    \"phoneNo\":\"9865765419\",\r\n    \"isAdmin\":false,\r\n    \"status\":true\r\n    }",
+							"raw": "{\r\n    \"firstName\":\"sahadev\",\r\n    \"lastName\":\"dahit\",\r\n    \"email\":\"dahit123@gmail.com\",\r\n    \"password\":\"hunk\",\r\n    \"phoneNo\":\"9865765419\",\r\n    \"isAdmin\":false,\r\n    \"status\":true\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,14 +40,7 @@
 					"name": "loginUser",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
@@ -197,7 +190,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"fruits\",\r\n    \"description\":\"best collections of flowers\"\r\n}",
+							"raw": "{\r\n    \"name\":\"bamboo\",\r\n    \"description\":\"best collections of root\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -232,25 +225,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/categories",
+							"raw": "{{baseUrl}}/categories/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"categories"
+								"categories",
+								""
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "updatreCategories",
+					"name": "updateCategories",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"fruit\"\r\n}",
+							"raw": "{\r\n    \"name\":\"fruits\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -258,13 +252,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/categories/659552b5e3aa3747beeb4d45",
+							"raw": "{{baseUrl}}/categories/659c0a10ef0fa2fdc3e7ca11",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"categories",
-								"659552b5e3aa3747beeb4d45"
+								"659c0a10ef0fa2fdc3e7ca11"
 							]
 						}
 					},
@@ -286,13 +280,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/categories/659552b5e3aa3747beeb4d45",
+							"raw": "{{baseUrl}}/categories/659c0995d99e8c7b0d379a7b",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"categories",
-								"659552b5e3aa3747beeb4d45"
+								"659c0995d99e8c7b0d379a7b"
 							]
 						}
 					},
@@ -320,7 +314,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Happy Seedlings Nursery\",\r\n    \"time\": \"9:00 AM - 4:30 PM\",\r\n    \"distance\": \"1.5 miles\",\r\n    \"address\": \"789 Pine Street\"\r\n    \r\n}\r\n",
+							"raw": "{\r\n    \"name\": \"Herbal\",\r\n    \"time\": \"9:00 AM - 5:30 PM\",\r\n    \"distance\": \"1.8 miles\",\r\n    \"address\": \"789 herbal Street\"\r\n    \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -357,12 +351,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/nurseries",
+							"raw": "{{baseUrl}}/nurseries/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"nurseries"
+								"nurseries",
+								""
 							]
 						}
 					},
@@ -383,13 +378,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/nurseries/659559350f50599092974bd2",
+							"raw": "{{baseUrl}}/nurseries/659c0c68629fb4dd9dff6de6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"nurseries",
-								"659559350f50599092974bd2"
+								"659c0c68629fb4dd9dff6de6"
 							]
 						}
 					},
@@ -411,13 +406,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/nurseries/65955fe80fd7cddbcf8d5194",
+							"raw": "{{baseUrl}}/nurseries/659c0c68629fb4dd9dff6de6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"nurseries",
-								"65955fe80fd7cddbcf8d5194"
+								"659c0c68629fb4dd9dff6de6"
 							]
 						}
 					},
@@ -440,7 +435,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"rating\": 3,\r\n    \"comment\": \"Great place! Friendly staff and a wonderful.\"\r\n}\r\n",
+							"raw": "{\r\n    \"rating\": 4,\r\n    \"comment\": \"Great place! Friendly staff and a wonderful.\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -448,13 +443,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/nurseries/659560120fd7cddbcf8d5195/reviews",
+							"raw": "{{baseUrl}}/nurseries/659c0cc8629fb4dd9dff6de9/reviews",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"nurseries",
-								"659560120fd7cddbcf8d5195",
+								"659c0cc8629fb4dd9dff6de9",
 								"reviews"
 							]
 						}
@@ -477,15 +472,34 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/nurseries/659560120fd7cddbcf8d5195/reviews/6595602b0fd7cddbcf8d5197",
+							"raw": "{{baseUrl}}/nurseries/659c0cc8629fb4dd9dff6de9/reviews/659c0cf3629fb4dd9dff6dea",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"nurseries",
-								"659560120fd7cddbcf8d5195",
+								"659c0cc8629fb4dd9dff6de9",
 								"reviews",
-								"6595602b0fd7cddbcf8d5197"
+								"659c0cf3629fb4dd9dff6dea"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchNursery",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/nurseries/search/seed",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"nurseries",
+								"search",
+								"seed"
 							]
 						}
 					},
@@ -513,7 +527,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Mary\",\r\n  \"description\": \"Updated description\",\r\n  \"category_id\": \"6595533fb6b35d901d623453\",\r\n  \"nursery_id\": \"659560120fd7cddbcf8d5195\", \r\n  \"price\": 66,\r\n  \"quantity\": 60\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"papaya\",\r\n  \"description\": \"Beautiful flowers\",\r\n  \"category_id\": \"6595533fb6b35d901d623453\",\r\n  \"nursery_id\": \"659777c19a1b99e8718f5187\", \r\n  \"price\": 66,\r\n  \"quantity\": 60\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -538,12 +552,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/plants",
+							"raw": "{{baseUrl}}/plants/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"plants"
+								"plants",
+								""
 							]
 						}
 					},
@@ -566,7 +581,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"name\": \"Rose\",\r\n       \"description\": \"Updated description\",\r\n    \"price\": 50\r\n}",
+							"raw": "{\r\n     \"name\": \"papaya\",\r\n    \"description\": \"Updated description\",\r\n    \"price\": 50\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -574,13 +589,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/plants/6595653b9962024c33c5731b",
+							"raw": "{{baseUrl}}/plants/659c104903563aa61d7e2799",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"plants",
-								"6595653b9962024c33c5731b"
+								"659c104903563aa61d7e2799"
 							]
 						}
 					},
@@ -602,13 +617,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/plants/6595653b9962024c33c5731b",
+							"raw": "{{baseUrl}}/plants/659781140fee23f972222aed",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"plants",
-								"6595653b9962024c33c5731b"
+								"659781140fee23f972222aed"
 							]
 						}
 					},
@@ -639,13 +654,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/plants/659568c28480b57dd5b47345/reviews",
+							"raw": "{{baseUrl}}/plants/659c104903563aa61d7e2799/reviews",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"plants",
-								"659568c28480b57dd5b47345",
+								"659c104903563aa61d7e2799",
 								"reviews"
 							]
 						}
@@ -668,7 +683,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/plants/659568c28480b57dd5b47345/reviews/659568d18480b57dd5b47347",
+							"raw": "{{baseUrl}}/plants/659568c28480b57dd5b47345/reviews/6597835316658d6280091dfa",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -676,7 +691,26 @@
 								"plants",
 								"659568c28480b57dd5b47345",
 								"reviews",
-								"659568d18480b57dd5b47347"
+								"6597835316658d6280091dfa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchPlants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/plants/search/r",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"plants",
+								"search",
+								"r"
 							]
 						}
 					},
@@ -712,13 +746,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/nurseryBookmarks/659560120fd7cddbcf8d5195/bookmarks",
+							"raw": "{{baseUrl}}/nurseryBookmarks/659777c19a1b99e8718f5187/bookmarks",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"nurseryBookmarks",
-								"659560120fd7cddbcf8d5195",
+								"659777c19a1b99e8718f5187",
 								"bookmarks"
 							]
 						}
@@ -741,13 +775,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/nurseryBookmarks/659560120fd7cddbcf8d5195/bookmarks",
+							"raw": "{{baseUrl}}/nurseryBookmarks/659777c19a1b99e8718f5187/bookmarks",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"nurseryBookmarks",
-								"659560120fd7cddbcf8d5195",
+								"659777c19a1b99e8718f5187",
 								"bookmarks"
 							]
 						}
@@ -944,7 +978,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"quantity\": 5\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -952,13 +986,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/carts/",
+							"raw": "{{baseUrl}}/carts",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"carts",
-								""
+								"carts"
 							]
 						}
 					},
@@ -981,7 +1014,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"address\": \"123 Main St, Cityville\",\r\n     \"quantity\": 5\r\n}",
+							"raw": "{\r\n     \"address\": \"123 Main St, Cityville\",\r\n     \"quantity\": 6\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -989,13 +1022,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/carts/65958c8cbeabd3a7fc3c327d",
+							"raw": "{{baseUrl}}/carts/659c01112e1aa12087b9e36b",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"carts",
-								"65958c8cbeabd3a7fc3c327d"
+								"659c01112e1aa12087b9e36b"
 							]
 						}
 					},
@@ -1017,13 +1050,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/carts/65958c8cbeabd3a7fc3c327d",
+							"raw": "{{baseUrl}}/carts/659c01112e1aa12087b9e36b",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"carts",
-								"65958c8cbeabd3a7fc3c327d"
+								"659c01112e1aa12087b9e36b"
 							]
 						}
 					},
@@ -1051,7 +1084,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"type\": \"simple\",\r\n    \"nursery_id\": \"659560120fd7cddbcf8d5195\",\r\n    \"message\": \"Happy gardening!\"\r\n}\r\n",
+							"raw": "{\r\n    \"type\": \"simple\",\r\n    \"nursery_id\": \"659777c19a1b99e8718f5187\",\r\n    \"message\": \"Happy gardening!\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1099,13 +1132,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/gifts/",
+							"raw": "{{baseUrl}}/gifts/6597746a4bb965429d66c44e",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"gifts",
-								""
+								"6597746a4bb965429d66c44e"
 							]
 						}
 					},
@@ -1127,13 +1160,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/gifts/65958f1def91dc8866b53b2f",
+							"raw": "{{baseUrl}}/gifts/659590473994670ec34fca4d",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"gifts",
-								"65958f1def91dc8866b53b2f"
+								"659590473994670ec34fca4d"
 							]
 						}
 					},
@@ -1197,13 +1230,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/orders/",
+							"raw": "{{baseUrl}}/orders/659777499a1b99e8718f5186",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"orders",
-								""
+								"659777499a1b99e8718f5186"
 							]
 						}
 					},
@@ -1234,13 +1267,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/orders/6595920760b463d698136acf",
+							"raw": "{{baseUrl}}/orders/659777499a1b99e8718f5186",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"orders",
-								"6595920760b463d698136acf"
+								"659777499a1b99e8718f5186"
 							]
 						}
 					},
@@ -1262,13 +1295,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/orders/6595920760b463d698136acf",
+							"raw": "{{baseUrl}}/orders/659777499a1b99e8718f5186",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"orders",
-								"6595920760b463d698136acf"
+								"659777499a1b99e8718f5186"
 							]
 						}
 					},
@@ -1344,12 +1377,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/pots",
+							"raw": "{{baseUrl}}/pots/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"pots"
+								"pots",
+								""
 							]
 						}
 					},
@@ -1380,13 +1414,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/pots/6595939b4abee4e72efae38c",
+							"raw": "{{baseUrl}}/pots/659c12474faf578e2ed61ad5",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"pots",
-								"6595939b4abee4e72efae38c"
+								"659c12474faf578e2ed61ad5"
 							]
 						}
 					},
@@ -1408,13 +1442,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/pots/6595939b4abee4e72efae38c",
+							"raw": "{{baseUrl}}/pots/6595947923fedea8fae472f5",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"pots",
-								"6595939b4abee4e72efae38c"
+								"6595947923fedea8fae472f5"
 							]
 						}
 					},
@@ -1515,13 +1549,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/savedAddress/659595adb24095f8f681c7f8",
+							"raw": "{{baseUrl}}/savedAddress/65977698a4d8239d72b8320c",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"savedAddress",
-								"659595adb24095f8f681c7f8"
+								"65977698a4d8239d72b8320c"
 							]
 						}
 					},
@@ -1543,13 +1577,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/savedAddress/659595adb24095f8f681c7f8",
+							"raw": "{{baseUrl}}/savedAddress/65977698a4d8239d72b8320c",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"savedAddress",
-								"659595adb24095f8f681c7f8"
+								"65977698a4d8239d72b8320c"
 							]
 						}
 					},

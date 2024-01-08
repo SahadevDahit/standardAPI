@@ -23,18 +23,20 @@ router.post("/", isLoggedIn, async (req, res) => {
 
         // Check if the plant exists
         const plant = await db.collection("plants").findOne({
-            _id: new ObjectId(plant_id)
+            _id: new ObjectId(plant_id),
         });
 
         if (!plant) {
             return res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         }
 
         // Create a new order
         const randomTxt = Math.random().toString(36).substring(7).toLocaleUpperCase();
-        const randomNumbers = Math.floor(1000 + Math.random() * 90000) + Date.now().toString();
+        const randomNumbers =
+            Math.floor(1000 + Math.random() * 90000) + Date.now().toString();
         const orderNumber = randomTxt + randomNumbers;
 
         const order = {
@@ -49,16 +51,21 @@ router.post("/", isLoggedIn, async (req, res) => {
         };
 
         // Save the order to the database
-        await db.collection("orders").insertOne(order);
+        const result = await db.collection("orders").insertOne(order);
 
         res.status(201).json({
+            code: 1,
             message: "Order created successfully",
-            order
+            data: {
+                _id: result.insertedId,
+                ...order,
+            },
         });
     } catch (error) {
         console.error("Error creating order:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -69,17 +76,24 @@ router.get("/", isLoggedIn, async (req, res) => {
         const userId = new ObjectId(req.userAuthId);
 
         // Retrieve orders for the specific user
-        const orders = await db.collection("orders").find({
-            user: userId
-        }).toArray();
+        const orders = await db.collection("orders")
+            .find({
+                user: userId,
+            })
+            .toArray();
 
         res.status(200).json({
-            orders
+            code: 1,
+            message: "Orders retrieved successfully",
+            data: {
+                orders,
+            },
         });
     } catch (error) {
         console.error("Error retrieving orders:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -93,22 +107,28 @@ router.get("/:orderId", isLoggedIn, async (req, res) => {
         // Retrieve the order details
         const order = await db.collection("orders").findOne({
             _id: orderId,
-            user: userId
+            user: userId,
         });
 
         if (!order) {
             return res.status(404).json({
-                message: "Order not found"
+                code: -1,
+                message: "Order not found",
             });
         }
 
         res.status(200).json({
-            order
+            code: 1,
+            message: "Order details retrieved successfully",
+            data: {
+                order,
+            },
         });
     } catch (error) {
         console.error("Error retrieving order details:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -125,27 +145,32 @@ router.put("/:orderId", isLoggedIn, async (req, res) => {
         // Update the status of the order
         const result = await db.collection("orders").updateOne({
             _id: orderId,
-            user: userId
+            user: userId,
         }, {
             $set: {
-                status
-            }
+                status,
+            },
         });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
-                message: "Order not found"
+                code: -1,
+                message: "Order not found",
             });
         }
 
         res.status(200).json({
+            code: 1,
             message: "Order status updated successfully",
-            "order": req.body
+            data: {
+                order: req.body,
+            },
         });
     } catch (error) {
         console.error("Error updating order status:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -159,22 +184,25 @@ router.delete("/:orderId", isLoggedIn, async (req, res) => {
         // Remove the order
         const result = await db.collection("orders").deleteOne({
             _id: orderId,
-            user: userId
+            user: userId,
         });
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
-                message: "Order not found"
+                code: -1,
+                message: "Order not found",
             });
         }
 
         res.status(200).json({
-            message: "Order canceled successfully"
+            code: 1,
+            message: "Order canceled successfully",
         });
     } catch (error) {
         console.error("Error canceling order:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });

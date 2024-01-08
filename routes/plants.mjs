@@ -9,14 +9,14 @@ import {
 import {
     isAdmin
 } from "../middlewares/isAdmin.mjs";
+
 const router = express.Router();
+
 // Get a list of 50 plants with average ratings
 router.get("/", async (req, res) => {
     try {
         const collection = await db.collection("plants");
-        const results = await collection.find({})
-            .limit(50)
-            .toArray();
+        const results = await collection.find({}).limit(50).toArray();
 
         // Calculate average rating for each plant
         const plantsWithAverageRating = results.map((plant) => {
@@ -31,11 +31,18 @@ router.get("/", async (req, res) => {
             return plant;
         });
 
-        res.status(200).json(plantsWithAverageRating);
+        res.status(200).json({
+            code: 1,
+            message: "Plants with average ratings retrieved successfully",
+            data: {
+                plants: plantsWithAverageRating,
+            },
+        });
     } catch (error) {
         console.error("Error fetching plants:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -51,7 +58,8 @@ router.get("/:id", async (req, res) => {
 
         if (!result) {
             res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         } else {
             // Calculate the average rating from plantReviews
@@ -64,36 +72,52 @@ router.get("/:id", async (req, res) => {
                 result.averageRating = 0;
             }
 
-            res.status(200).json(result);
+            res.status(200).json({
+                code: 1,
+                message: "Plant details retrieved successfully",
+                data: {
+                    plant: result,
+                },
+            });
         }
     } catch (error) {
         console.error("Error fetching plant:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
+
 // Get a list of plants by partial name match
 router.get("/search/:partialName", async (req, res) => {
     try {
         const collection = await db.collection("plants");
         const partialName = req.params.partialName;
 
-        const plants = await collection.find({
-            name: {
-                $regex: new RegExp(partialName, "i") // Case-insensitive partial match
-            }
-        }).toArray();
+        const plants = await collection
+            .find({
+                name: {
+                    $regex: new RegExp(partialName, "i"), // Case-insensitive partial match
+                },
+            })
+            .toArray();
 
-        res.status(200).json(plants);
+        res.status(200).json({
+            code: 1,
+            message: "Plants retrieved by partial name match successfully",
+            data: {
+                plants,
+            },
+        });
     } catch (error) {
         console.error("Error fetching plants by partial name:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
-
 
 // Add a new plant
 router.post("/", isLoggedIn, isAdmin, async (req, res) => {
@@ -111,12 +135,13 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
 
         // Check if the provided category_id exists
         const category = await db.collection("categories").findOne({
-            _id: new ObjectId(category_id)
+            _id: new ObjectId(category_id),
         });
 
         if (!category) {
             return res.status(404).json({
-                message: "Category not found"
+                code: -1,
+                message: "Category not found",
             });
         }
 
@@ -124,12 +149,13 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
         let nurseryIdObject = null;
         if (nursery_id) {
             const nursery = await db.collection("nurseries").findOne({
-                _id: new ObjectId(nursery_id)
+                _id: new ObjectId(nursery_id),
             });
 
             if (!nursery) {
                 return res.status(404).json({
-                    message: "Nursery not found"
+                    code: -1,
+                    message: "Nursery not found",
                 });
             }
 
@@ -145,19 +171,24 @@ router.post("/", isLoggedIn, isAdmin, async (req, res) => {
             images,
             price,
             quantity,
-            plantReviews: [] // Initialize as an empty array
+            plantReviews: [], // Initialize as an empty array
         };
 
         const result = await collection.insertOne(newPlant);
 
         res.status(201).json({
+            code: 1,
             message: "Plant added successfully",
-            plant: newPlant
+            data: {
+                _id: result.insertedId,
+                ...newPlant,
+            },
         });
     } catch (error) {
         console.error("Error creating plant:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -177,6 +208,21 @@ router.put("/:id", isLoggedIn, async (req, res) => {
             quantity
         } = req.body;
 
+        // Check if the provided plant name already exists
+        const existingPlantWithName = await collection.findOne({
+            name,
+            _id: {
+                $ne: plantId // Exclude the current plant from the check
+            }
+        });
+
+        if (existingPlantWithName) {
+            return res.status(400).json({
+                code: -1,
+                message: "Plant name already exists. Please choose a different name."
+            });
+        }
+
         const updateQuery = {
             $set: {
                 name,
@@ -185,28 +231,38 @@ router.put("/:id", isLoggedIn, async (req, res) => {
                 nursery_id: nursery_id ? new ObjectId(nursery_id) : null,
                 user: new ObjectId(user),
                 price,
-                quantity
+                quantity,
             },
         };
 
         const result = await collection.updateOne({
-            _id: plantId
-        }, updateQuery);
+                _id: plantId,
+            },
+            updateQuery
+        );
 
         if (result.modifiedCount === 0) {
             return res.status(404).json({
-                message: "Plant not found or no changes applied"
+                code: -1,
+                message: "Plant not found or no changes applied",
             });
         }
 
         const updatedPlant = await collection.findOne({
-            _id: plantId
+            _id: plantId,
         });
-        res.status(200).json(updatedPlant);
+        res.status(200).json({
+            code: 1,
+            message: "Plant details updated successfully",
+            data: {
+                plant: updatedPlant,
+            },
+        });
     } catch (error) {
         console.error("Error updating plant:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
@@ -217,26 +273,28 @@ router.delete("/:id", isLoggedIn, isAdmin, async (req, res) => {
         const collection = await db.collection("plants");
         const plantId = new ObjectId(req.params.id);
         const result = await collection.deleteOne({
-            _id: plantId
+            _id: plantId,
         });
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         }
 
         res.status(200).json({
-            message: "Plant deleted successfully"
+            code: 1,
+            message: "Plant deleted successfully",
         });
     } catch (error) {
         console.error("Error deleting plant:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
-
 
 // Add a review to a plant
 router.post("/:plantId/reviews", isLoggedIn, async (req, res) => {
@@ -246,11 +304,12 @@ router.post("/:plantId/reviews", isLoggedIn, async (req, res) => {
 
         // Check if the plant exists
         const existingPlant = await collection.findOne({
-            _id: plantId
+            _id: plantId,
         });
         if (!existingPlant) {
             return res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         }
 
@@ -258,31 +317,38 @@ router.post("/:plantId/reviews", isLoggedIn, async (req, res) => {
             _id: new ObjectId(),
             user: new ObjectId(req.userAuthId),
             rating: req.body.rating,
-            comment: req.body.comment
+            comment: req.body.comment,
         };
 
         // Update the existing plant document to include the new review
         const updateQuery = {
             $push: {
-                plantReviews: plantReviews
-            }
+                plantReviews: plantReviews,
+            },
         };
 
         await collection.updateOne({
-            _id: plantId
-        }, updateQuery);
+                _id: plantId,
+            },
+            updateQuery
+        );
 
         res.status(201).json({
+            code: 1,
             message: "Review added successfully",
-            plantReviews
+            data: {
+                plantReviews,
+            },
         });
     } catch (error) {
         console.error("Error adding plant review:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
+
 // Delete a plant review
 router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
     try {
@@ -292,12 +358,13 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
 
         // Check if the plant exists
         const plant = await collection.findOne({
-            _id: plantId
+            _id: plantId,
         });
 
         if (!plant) {
             return res.status(404).json({
-                message: "Plant not found"
+                code: -1,
+                message: "Plant not found",
             });
         }
 
@@ -306,7 +373,8 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
 
         if (reviewIndex === -1) {
             return res.status(404).json({
-                message: "Plant review not found"
+                code: -1,
+                message: "Plant review not found",
             });
         }
 
@@ -315,24 +383,24 @@ router.delete("/:plantId/reviews/:reviewId", isLoggedIn, async (req, res) => {
 
         // Save the updated plant document
         await collection.updateOne({
-            _id: plantId
+            _id: plantId,
         }, {
             $set: {
-                plantReviews: plant.plantReviews
-            }
+                plantReviews: plant.plantReviews,
+            },
         });
 
         res.status(200).json({
-            message: "Plant review deleted successfully"
+            code: 1,
+            message: "Plant review deleted successfully",
         });
     } catch (error) {
         console.error("Error deleting plant review:", error);
         res.status(500).json({
-            message: "Internal Server Error"
+            code: 0,
+            message: "Internal Server Error",
         });
     }
 });
-
-
 
 export default router;
