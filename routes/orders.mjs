@@ -14,22 +14,22 @@ router.post("/", isLoggedIn, async (req, res) => {
     try {
         const userId = new ObjectId(req.userAuthId);
         const {
-            plant_id,
+            product_id,
             status,
             quantity,
             paymentMethod,
             currency
         } = req.body;
 
-        // Check if the plant exists
-        const plant = await db.collection("plants").findOne({
-            _id: new ObjectId(plant_id),
+        // Check if the product exists
+        const product = await db.collection("products").findOne({
+            _id: new ObjectId(product_id),
         });
 
-        if (!plant) {
+        if (!product) {
             return res.status(404).json({
                 code: -1,
-                message: "Plant not found",
+                message: "product not found",
             });
         }
 
@@ -42,7 +42,7 @@ router.post("/", isLoggedIn, async (req, res) => {
         const order = {
             orderNumber,
             user: userId,
-            plant_id: new ObjectId(plant_id),
+            product_id: new ObjectId(product_id),
             status,
             quantity,
             paymentMethod,
@@ -133,47 +133,56 @@ router.get("/:orderId", isLoggedIn, async (req, res) => {
     }
 });
 
-// PUT endpoint to update the status of a specific order
-router.put("/:orderId", isLoggedIn, async (req, res) => {
+// PATCH endpoint to update the status of a specific order
+router.patch("/:orderId", isLoggedIn, async (req, res) => {
     try {
-        const userId = new ObjectId(req.userAuthId);
         const orderId = new ObjectId(req.params.orderId);
         const {
-            status
+            status,
+            quantity,
+            paymentMethod,
+            currency
         } = req.body;
 
-        // Update the status of the order
+        // Create the update query
+        const updateQuery = {};
+
+        // Add only the fields that are provided in the request body
+        if (status !== undefined) updateQuery.status = status;
+        if (quantity !== undefined) updateQuery.quantity = quantity;
+        if (paymentMethod !== undefined) updateQuery.paymentMethod = paymentMethod;
+        if (currency !== undefined) updateQuery.currency = currency;
+
+        // Update the order details
         const result = await db.collection("orders").updateOne({
             _id: orderId,
-            user: userId,
         }, {
-            $set: {
-                status,
-            },
+            $set: updateQuery,
         });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
                 code: -1,
-                message: "Order not found",
+                message: "Order found but no changes made",
             });
         }
 
         res.status(200).json({
             code: 1,
-            message: "Order status updated successfully",
+            message: "Order details updated successfully",
             data: {
-                order: req.body,
+                order: updateQuery,
             },
         });
     } catch (error) {
-        console.error("Error updating order status:", error);
+        console.error("Error updating order details:", error);
         res.status(500).json({
             code: 0,
             message: "Internal Server Error",
         });
     }
 });
+
 
 // DELETE endpoint to cancel a specific order
 router.delete("/:orderId", isLoggedIn, async (req, res) => {

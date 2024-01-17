@@ -62,6 +62,14 @@ router.get("/:id", async (req, res) => {
 // Add a new category
 router.post("/", isLoggedIn, async (req, res) => {
     try {
+        const type = req?.type;
+
+        if (type !== 1) {
+            res.status(500).json({
+                code: -1,
+                message: "Only Vendor is allowed",
+            });
+        }
         const collection = db.collection("categories");
         const {
             name
@@ -105,8 +113,16 @@ router.post("/", isLoggedIn, async (req, res) => {
 });
 
 // Update category details
-router.put("/:id", async (req, res) => {
+router.patch("/:id", isLoggedIn, async (req, res) => {
     try {
+        const type = req?.type;
+
+        if (type !== 1) {
+            res.status(500).json({
+                code: -1,
+                message: "Only Vendor is allowed",
+            });
+        }
         const collection = await db.collection("categories");
         const categoryId = new ObjectId(req.params.id);
         const {
@@ -116,26 +132,24 @@ router.put("/:id", async (req, res) => {
 
         // Check if a category with the same name already exists
         const existingCategory = await collection.findOne({
-            name,
-            _id: {
-                $ne: categoryId
-            }, // Exclude the current category from the check
+            _id: categoryId
         });
 
-        if (existingCategory) {
-            return res.status(400).json({
+        if (!existingCategory) {
+            return res.status(404).json({
                 code: -1,
-                message: "Category with this name already exists",
+                message: "Category not found",
             });
         }
 
         const updateQuery = {
-            $set: {
-                name,
-                description,
-                // Add other fields here
-            },
+            $set: {}
         };
+
+        // Add only the fields that are provided in the request body
+        if (name) updateQuery.$set.name = name;
+        if (description) updateQuery.$set.description = description;
+        // Add other fields here
 
         const result = await collection.updateOne({
             _id: categoryId
@@ -151,6 +165,7 @@ router.put("/:id", async (req, res) => {
         const updatedCategory = await collection.findOne({
             _id: categoryId
         });
+
         res.status(200).json({
             code: 1,
             message: "Category updated successfully",
@@ -168,7 +183,16 @@ router.put("/:id", async (req, res) => {
 
 // Delete a category
 router.delete("/:id", isLoggedIn, async (req, res) => {
+
     try {
+        const type = req?.type;
+
+        if (type !== 1) {
+            res.status(500).json({
+                code: -1,
+                message: "Only Vendor is allowed",
+            });
+        }
         const collection = await db.collection("categories");
         const categoryId = new ObjectId(req.params.id);
         const result = await collection.deleteOne({

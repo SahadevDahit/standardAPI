@@ -13,26 +13,26 @@ const router = express.Router();
 router.post("/", isLoggedIn, async (req, res) => {
     try {
         const {
-            plant_id,
+            product_id,
             name,
             price
         } = req.body;
 
-        // Check if the plant exists
-        const plant = await db.collection("plants").findOne({
-            _id: new ObjectId(plant_id),
+        // Check if the product exists
+        const product = await db.collection("products").findOne({
+            _id: new ObjectId(product_id),
         });
 
-        if (!plant) {
+        if (!product) {
             return res.status(404).json({
                 code: -1,
-                message: "Plant not found",
+                message: "product not found",
             });
         }
 
         // Create a new pot
         const pot = {
-            plant_id: new ObjectId(plant_id),
+            product_id: new ObjectId(product_id),
             name,
             price,
         };
@@ -56,10 +56,10 @@ router.post("/", isLoggedIn, async (req, res) => {
     }
 });
 
-// GET endpoint to retrieve pots for a specific plant
+// GET endpoint to retrieve pots for a specific product
 router.get("/", isLoggedIn, async (req, res) => {
     try {
-        // Retrieve pots for the specific plant
+        // Retrieve pots for the specific product
         const pots = await db.collection("pots").find().toArray();
 
         res.status(200).json({
@@ -112,7 +112,7 @@ router.get("/:id", isLoggedIn, async (req, res) => {
 });
 
 // PUT endpoint to update the details of a specific pot
-router.put("/:id", isLoggedIn, async (req, res) => {
+router.patch("/:id", isLoggedIn, async (req, res) => {
     try {
         const id = new ObjectId(req.params.id);
         const {
@@ -120,28 +120,31 @@ router.put("/:id", isLoggedIn, async (req, res) => {
             price
         } = req.body;
 
+        // Create the update query
+        const updateQuery = {};
+
+        // Add only the fields that are provided in the request body
+        if (name !== undefined) updateQuery.name = name;
+        if (price !== undefined) updateQuery.price = price;
+
         // Update the details of the pot
         const result = await db.collection("pots").updateOne({
             _id: id
         }, {
-            $set: {
-                name,
-                price,
-            },
+            $set: updateQuery,
         });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
                 code: -1,
-                message: "Pot not found",
+                message: "Pot found but no changes made",
             });
         }
         res.status(200).json({
             code: 1,
             message: "Pot details updated successfully",
             data: {
-                name,
-                price
+                ...updateQuery
             },
         });
     } catch (error) {
@@ -152,6 +155,7 @@ router.put("/:id", isLoggedIn, async (req, res) => {
         });
     }
 });
+
 
 // DELETE endpoint to remove a specific pot
 router.delete("/:id", isLoggedIn, async (req, res) => {

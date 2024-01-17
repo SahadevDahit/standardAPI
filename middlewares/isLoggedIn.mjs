@@ -18,6 +18,7 @@ export const isLoggedIn = async (req, res, next) => {
         } else {
             // save the user into req obj
             req.userAuthId = decodedUser?.id;
+            req.type = decodedUser?.type;
             next();
         }
     } catch (error) {

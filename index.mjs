@@ -7,14 +7,15 @@ import bodyParser from 'body-parser'; // Import body-parser
 import users from "./routes/users.mjs";
 import categories from "./routes/categories.mjs";
 import nurseries from "./routes/nurseries.mjs";
-import plants from "./routes/plants.mjs";
+import products from "./routes/products.mjs";
 import nurseryBookmarks from "./routes/nurseryBookmarks.mjs";
-import plantsBookmarks from "./routes/plantsBookmarks.mjs";
+import productsBookmarks from "./routes/productsBookmarks.mjs";
 import carts from "./routes/carts.mjs";
 import gifts from "./routes/gifts.mjs";
 import orders from "./routes/orders.mjs";
 import pots from "./routes/pots.mjs";
 import savedAddress from "./routes/savedAddress.mjs";
+import nurseryReview from "./routes/nurseryReviews.mjs"
 const app = express();
 
 const PORT = process.env.PORT || 2024;
@@ -32,14 +33,15 @@ app.use(bodyParser.urlencoded({
 app.use("/users", users);
 app.use("/categories", categories);
 app.use("/nurseries", nurseries);
-app.use("/plants", plants);
+app.use("/products", products);
 app.use("/nurseryBookmarks", nurseryBookmarks);
-app.use("/plantsBookmarks", plantsBookmarks);
+app.use("/productsBookmarks", productsBookmarks);
 app.use("/carts", carts);
 app.use("/gifts", gifts);
 app.use("/orders", orders);
 app.use("/pots", pots);
 app.use("/savedAddress", savedAddress);
+app.use("/nurseryReview", nurseryReview)
 
 app.get("/", (req, res) => {
     res.status(200).send("Welcome to the server.....")

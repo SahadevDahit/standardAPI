@@ -116,8 +116,8 @@ router.get("/:addressId", isLoggedIn, async (req, res) => {
     }
 });
 
-// PUT endpoint to update the details of a specific saved address
-router.put("/:addressId", isLoggedIn, async (req, res) => {
+// PATCH endpoint to update the details of a specific saved address
+router.patch("/:addressId", isLoggedIn, async (req, res) => {
     try {
         const userId = new ObjectId(req.userAuthId);
         const addressId = new ObjectId(req.params.addressId);
@@ -131,26 +131,30 @@ router.put("/:addressId", isLoggedIn, async (req, res) => {
             zipcode
         } = req.body;
 
+        // Create the update query
+        const updateQuery = {};
+
+        // Add only the fields that are provided in the request body
+        if (receiver_name !== undefined) updateQuery.receiver_name = receiver_name;
+        if (receiver_contact !== undefined) updateQuery.receiver_contact = receiver_contact;
+        if (streetAddress !== undefined) updateQuery.streetAddress = streetAddress;
+        if (apartment !== undefined) updateQuery.apartment = apartment;
+        if (city !== undefined) updateQuery.city = city;
+        if (country !== undefined) updateQuery.country = country;
+        if (zipcode !== undefined) updateQuery.zipcode = zipcode;
+
         // Update the details of the saved address
         const result = await db.collection("savedAddresses").updateOne({
             _id: addressId,
             user: userId
         }, {
-            $set: {
-                receiver_name,
-                receiver_contact,
-                streetAddress,
-                apartment,
-                city,
-                country,
-                zipcode
-            }
+            $set: updateQuery
         });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
                 code: -1,
-                message: "Saved address not found"
+                message: "Saved address  found but no changes made"
             });
         }
 
@@ -158,7 +162,7 @@ router.put("/:addressId", isLoggedIn, async (req, res) => {
             code: 1,
             message: "Saved address details updated successfully",
             data: {
-                savedAddress: req.body
+                savedAddress: updateQuery
             }
         });
     } catch (error) {
@@ -169,6 +173,7 @@ router.put("/:addressId", isLoggedIn, async (req, res) => {
         });
     }
 });
+
 
 // DELETE endpoint to remove a specific saved address
 router.delete("/:addressId", isLoggedIn, async (req, res) => {

@@ -8,9 +8,6 @@ import bcrypt from "bcryptjs";
 import {
     isLoggedIn
 } from "../middlewares/isLoggedIn.mjs";
-import {
-    isAdmin
-} from "../middlewares/isAdmin.mjs";
 
 const router = express.Router();
 
@@ -82,7 +79,7 @@ router.post("/login", async (req, res) => {
         }
 
         // Generate a token for the user
-        const token = generateToken(user._id);
+        const token = generateToken(user?._id, user?.type);
 
         // Return the token and user array
         res.status(200).json({
@@ -102,6 +99,8 @@ router.post("/login", async (req, res) => {
     }
 });
 
+
+// type = 1 for vendor, 2 for customer and 3 for delivery
 // register a user
 router.post("/", async (req, res) => {
     try {
@@ -147,49 +146,42 @@ router.post("/", async (req, res) => {
 });
 
 // update the user profile
-router.put("/", isLoggedIn, async (req, res) => {
+router.patch("/", isLoggedIn, async (req, res) => {
     try {
         const collection = await db.collection("users");
 
         // Get the user ID from the logged-in user
         const userId = new ObjectId(req.userAuthId);
-
         // Extract update data from req.body
         const {
-            email,
             firstName,
             lastName,
             phoneNo,
-            isAdmin,
+            role,
             status
         } = req.body;
 
-        // Check if the new email is already in use by another user
         const existingUser = await collection.findOne({
-            email,
-            _id: {
-                $ne: email
-            }, // Exclude the current user from the check
+            _id: userId
         });
-
-        if (existingUser) {
+        if (!existingUser) {
             return res.status(400).json({
                 code: -1,
-                message: "Email is already in use by another user",
+                message: "User not found",
             });
         }
 
         // Create the update query
         const updateQuery = {
-            $set: {
-                email,
-                firstName,
-                lastName,
-                phoneNo,
-                isAdmin,
-                status,
-            },
+            $set: {}
         };
+
+        // Add only the fields that are provided in the request body
+        if (firstName) updateQuery.$set.firstName = firstName;
+        if (lastName) updateQuery.$set.lastName = lastName;
+        if (phoneNo) updateQuery.$set.phoneNo = phoneNo;
+        if (role !== undefined) updateQuery.$set.role = role;
+        if (status !== undefined) updateQuery.$set.status = status;
 
         // Perform the update
         const result = await collection.updateOne({
@@ -200,7 +192,7 @@ router.put("/", isLoggedIn, async (req, res) => {
             // No user was updated
             return res.status(404).json({
                 code: -1,
-                message: "User not found or no changes applied",
+                message: "User  found but no changes applied",
             });
         }
 
@@ -224,7 +216,7 @@ router.put("/", isLoggedIn, async (req, res) => {
 });
 
 // Delete user
-router.delete("/", isLoggedIn, isAdmin, async (req, res) => {
+router.delete("/", isLoggedIn, async (req, res) => {
     try {
         const query = {
             _id: ObjectId(req.userAuthId),
@@ -266,5 +258,6 @@ router.delete("/", isLoggedIn, isAdmin, async (req, res) => {
         });
     }
 });
+
 
 export default router;
